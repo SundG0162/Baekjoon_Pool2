@@ -1,64 +1,61 @@
 #include <iostream>
+#include<string>
 using namespace std;
 
-struct node // 노드 
+struct Node
 {
 	int data;
-	node* left;
-	node* right;
+	Node* right;
+	Node* left;
 };
 
-node* MakeNode(int n) // 노드를 만드는 함수
-{
-	node* nd = new node;
-	nd->data = n;
-	nd->left = NULL;
-	nd->right = NULL;
-	return nd;
-}
-node* root = NULL;
+Node* root;
 
-void Insert(node* r, node* node)
+Node* MakeNode(int data)
 {
-	if (root == NULL) {
-		root = node;
-		return;
-	}
-	if (r->data < node->data) //root 오른쪽으로
+	Node* node = new Node();
+	node->data = data;
+	node->right = NULL;
+	node->left = NULL;
+	return node;
+}
+
+void InsertNode(Node* r, Node* node)
+{
+	if (r->data < node->data)
 	{
 		if (r->right == NULL)
 			r->right = node;
 		else
-			Insert(r->right, node);
+			InsertNode(r->right, node);
 	}
-	else if ((r->data > node->data))//root 왼쪽으로
+	else if (r->data > node->data)
 	{
 		if (r->left == NULL)
 			r->left = node;
 		else
-			Insert(r->left, node);
+			InsertNode(r->left, node);
 	}
-}
-void postorder(node* nd)
-{
-	if (nd->left != NULL)
-	{
-		postorder(nd->left);
-	}
-	if (nd->right != NULL)
-	{
-		postorder(nd->right);
-	}
-	cout << nd->data << endl;
 }
 
-int main() {
-	cin.tie(NULL);
-	cout.tie(NULL);
-	ios::sync_with_stdio(false);
-	int value;
-	while (cin >> value)
-		Insert(root, MakeNode(value));
-	postorder(root);
-	return 0;
+void Search(Node* node)
+{
+	if (node->left != NULL)
+		Search(node->left);
+	if (node->right != NULL)
+		Search(node->right);
+	cout << node->data << endl;
+}
+
+int main() 
+{
+	int input;
+	cin >> input;
+	root = MakeNode(input);
+	while (cin >> input)
+	{
+		InsertNode(root, MakeNode(input));
+	}
+
+	Search(root);
 }
