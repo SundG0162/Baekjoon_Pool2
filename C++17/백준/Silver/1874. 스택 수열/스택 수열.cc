@@ -15,7 +15,6 @@ int main()
 	bool flag = false;
 	string str = "";
 	stack<int> s;
-	vector<int> result;
 
 	for (int i = 0, x; i < n; i++)
 	{
@@ -25,7 +24,6 @@ int main()
 		{
 			if (!s.empty() && s.top() == x)
 			{
-				result.push_back(s.top());
 				s.pop();
 				str += "-\n";
 				break;
@@ -42,7 +40,6 @@ int main()
 				s.push(m);
 				if (x == m)
 				{
-					result.push_back(s.top());
 					s.pop();
 					str += "-\n";
 					m++;
