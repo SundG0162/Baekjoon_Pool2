@@ -18,8 +18,6 @@ int main()
 	int map[501][501];
 
 	int highest = 0, lowest = 256;
-	int height[257];
-	memset(height, 0, sizeof(height));
 
 	int n, m, b;
 	cin >> n >> m >> b;
@@ -31,7 +29,6 @@ int main()
 			int input;
 			cin >> input;
 			map[i][j] = input;
-			height[input]++;
 			if (input > highest)
 				highest = input;
 			if (input < lowest)
