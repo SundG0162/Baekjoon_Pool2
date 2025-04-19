@@ -61,34 +61,6 @@ struct distInfo
 	}
 };
 
-int tsp(vector<vector<int>>& adj, int current, int visit)
-{
-	int maxBit = (1 << dustCount) - 1; // 모든 먼지를 치운다면 비트가 딱 이모냥이 됨.
-	int leftDust = ~visit & maxBit; // 남은 먼지의 Index를 1로, 치운 먼지의 Index를 0으로 바꿈
-	if ((leftDust & (leftDust - 1)) == 0) // leftDust가 2의 거듭 제곱(하나의 비트만 1)인지 확인. 2의 거듭 제곱이면 값은 무조건 0
-	{
-		int idx = std::log2(leftDust);
-		if (adj[current][idx] == VERY_BIG_NUMBER)
-			return VERY_BIG_NUMBER;
-		return adj[current][idx];
-	}
-	if (dist[current][visit] != -1)
-		return dist[current][visit];
-
-	int minCost = VERY_BIG_NUMBER;
-	for(int i = 0; i < dustCount; i++)
-	{
-		if ((visit & (1 << i)) == 0 && adj[current][i] != VERY_BIG_NUMBER)
-		{
-			int toVisit = visit | (1 << i);
-			int tempCost = adj[current][i] + tsp(adj, i, toVisit);
-			minCost = std::min(tempCost, minCost);
-		}
-	}
-	return dist[current][visit] = minCost;
-
-}
-
 void bfs(vector<vector<char>>& map, vector<vector<int>>& adj, int x, int y, int node)
 {
 	MEMSET(visited, false);
@@ -126,6 +98,29 @@ void bfs(vector<vector<char>>& map, vector<vector<int>>& adj, int x, int y, int 
 	}
 }
 
+int tsp(vector<vector<int>>& adj, int current, int visit)
+{
+	int maxMask = (1 << dustCount) - 1;
+	if (visit == maxMask) 
+		return 0;
+
+	if (dist[current][visit] != -1)
+		return dist[current][visit];
+
+	int minCost = VERY_BIG_NUMBER;
+	for(int i = 0; i < dustCount; i++)
+	{
+		if ((visit & (1 << i)) == 0 && adj[current][i] != VERY_BIG_NUMBER)
+		{
+			int toVisit = visit | (1 << i);
+			int tempCost = adj[current][i] + tsp(adj, i, toVisit);
+			minCost = std::min(tempCost, minCost);
+		}
+	}
+	return dist[current][visit] = minCost;
+}
+
+
 bool solve()
 {
 	cin >> w >> h;
@@ -154,6 +149,7 @@ bool solve()
 			}
 		}
 	}
+
 	vector<vector<int>> adj(dustCount + 1, vector<int>(dustCount + 1, VERY_BIG_NUMBER));
 
 	for (int i = 0; i <= dustCount; i++)
@@ -162,7 +158,6 @@ bool solve()
 	}
 
 	MEMSET(dist, -1);
-	adj;
 	int cleanDist = tsp(adj, 0, 1);
 	if (cleanDist == VERY_BIG_NUMBER)
 		cout << -1 << '\n';
@@ -176,4 +171,3 @@ int main()
 	FAST_PRINT;
 	while (solve());
 }
-
